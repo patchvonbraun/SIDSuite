@@ -1,0 +1,10 @@
+This package is a collection of code used to implement a multi-channel
+  SID (Sudden Ionospheric Disturbance) receiver using an audio card, and
+  Gnu Radio.
+
+Buid/install summary
+
+make -f Makefile.sidsuite
+make -f Makefile.sidsuite install
+
+It installs itself in $HOME/bin, which you had better already have in place.
