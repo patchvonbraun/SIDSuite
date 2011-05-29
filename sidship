@@ -1,0 +1,334 @@
+#!/bin/sh
+#
+# This script is used to convert our daily channel files into the format
+#  used by the Stanford SuperSid folks
+#
+isanumber ()
+{
+	valid=`echo $input|awk '
+	/./ {if ($0 ~ /^[0-9][0-9]*$/)
+		{
+			print "yes"
+		}
+		else 
+		{
+			print "no"
+		}
+	}'`
+	if [ $valid = "no" ]
+	then
+		echo Invalid input: $input
+	fi
+}
+
+islatlong ()
+{
+	valid=`echo $input|awk '
+	/./ {if ($0 ~ /^-*[0-9][0-9]*[.][0-9][0-9]*$/)
+		{
+			print "yes"
+		}
+		else 
+		{
+			print "no"
+		}
+	}'`
+	if [ $valid = "no" ]
+	then
+		echo Invalid input: $input
+	fi
+}
+
+isemail ()
+{
+valid=`echo $input|awk '
+	/./ {if ($0 ~ /^[-a-zA-Z_.0-9][-a-zA-Z_.0-9]*@[-a-zA-Z.0-9][-a-zA-Z.0-9]*$/)
+		{
+			print "yes"
+		}
+		else 
+		{
+			print "no"
+		}
+	}'`
+	if [ $valid = "no" ]
+	then
+		echo Invalid input: $input
+	fi
+}
+
+		
+if [ -e $HOME/.sidshipinfo ]
+then
+	. $HOME/.sidshipinfo
+else
+
+	echo You do not appear to have SID data shipping information configured
+	echo Setting up that information now
+	echo -n "SITE: "
+	read SITE
+	valid=no
+	while [ $valid != "yes" ]
+	do
+		echo -n "LONGITUDE: "
+		read input
+		islatlong
+	done
+	LONGITUDE="$input"
+	
+	valid=no
+	while [ $valid != "yes" ]
+	do
+		echo -n "LATITUDE: "
+		read input
+		islatlong
+	done
+	LATITUDE="$input"
+	
+	valid=no
+	while [ $valid != "yes" ]
+	do
+		echo -n "UTC OFFSET: "
+		read input
+		islatlong
+	done
+	UTC_OFFSET="$input"
+	
+	echo -n "TIMEZONE: "
+	read TIMEZONE
+	
+	valid=no
+	while [ $valid != "yes" ]
+	do
+		echo -n "MONITORID: "
+		read input
+		isanumber
+	done
+	MONITORID="$input"
+	
+	valid=no
+	while [ $valid != "yes" ]
+	do
+		echo -n "EMAIL: "
+		read input
+		isemail
+	done
+	EMAIL="$input"
+	
+	echo "SITE=\"$SITE\"" >$HOME/.sidshipinfo
+	echo "LONGITUDE=\"$LONGITUDE\"" >>$HOME/.sidshipinfo
+	echo "LATITUDE=\"$LATITUDE\"" >>$HOME/.sidshipinfo
+	echo "UTC_OFFSET=\"$UTC_OFFSET\"" >>$HOME/.sidshipinfo
+	echo "TIMEZONE=\"$TIMEZONE\"" >>$HOME/.sidshipinfo
+	echo "MONITORID=\"$MONITORID\"" >>$HOME/.sidshipinfo
+	echo "EMAIL=\"$EMAIL\"" >>$HOME/.sidshipinfo
+		
+	. $HOME/.sidshipinfo
+fi
+
+#
+# Probably don't need to change these
+#
+FTPSERVER=sid-ftp.stanford.edu
+FTPUSER=anonymous
+PASS=$EMAIL
+DIRECTORY=incoming/SuperSID/NEW
+
+PATH=$PATH:$HOME/bin
+
+export PATH
+freq=24000
+station=""
+
+chan=""
+
+
+DATE="NONE"
+
+while [ "@@" != "@$1@" ]; do
+	case "$1" in
+		-f|-freq|-frequency)
+			freq=$2
+			shift 2
+			;;
+			
+		-s|-station|-sname|-name)
+			station=$2
+			shift 2
+			;;
+			
+		-c|-chan|-ch)
+			chan=$2
+			shift 2
+			;;
+			
+		-d|-date)
+			DATE=$2
+			shift 2
+			;;
+			
+		-help|-h)
+			shift
+			cat <<!EOF!
+Usage: sidship options:
+	-f|-freq|-frequency         frequency, in Hz
+	-s|-station|-sname|-name    station name: e.g.: NAA
+	-c|-chan|-ch                channel number 1-4
+	-d|-date|-date              date: YYYY-MM-DD
+!EOF!
+			exit
+			;;
+		
+		-*)
+			echo "Unknown option" $1
+			exit
+			;;
+		*)
+			echo "Unknown parameter" $1
+			exit
+			;;
+	esac
+done
+
+if [ $DATE != "NONE" ]
+then
+	case $DATE in
+		[2][0][123][0-9]-[01][0-9]-[0-9][0-9])
+			;;
+		*)
+			echo Invalid date: $DATE
+			echo format is: YYYY-MM-DD
+			exit
+		;;
+	esac
+	YEAR=`echo $DATE|sed -e 's/-.*$//'`
+	MONTH=`echo $DATE|sed -e 's/^....-//'|sed -e 's/-.*$//'`
+	DAY=`echo $DATE|sed -e 's/^....-..-//'`
+
+fi
+
+if [ @@ = "@$chan@" -o @@ = "$freq" ]
+then
+	echo You must specify at least channel and frequency
+				cat <<!EOF!
+Usage: sidship options:
+	-f|-freq|-frequency         frequency, in Hz
+	-s|-station|-sname|-name    station name: e.g.: NAA
+	-c|-chan|-ch                channel number 1-4
+	-d|-date|-date              date: YYYY-MM-DD
+!EOF!
+	exit
+fi
+
+freq=`echo $freq|awk '/./ {printf ("%d", 0+$1)}'`
+if [ $freq -le  0 ]
+then
+	echo Frequency parameter is invalid--must be a number
+	exit
+fi
+
+if [ $freq -le 12000 -o $freq -gt 45000 ]
+then
+	echo Frequency $freq likely invalid for VLF station
+	exit
+fi
+
+cat >tbl$$ <<"!EOF!"
+40000 JJY
+24000 NAA
+25200 NML
+24800 NLK
+19800 NWK
+20000 VLF
+21400 NPM
+40800 NAU
+23400 DHO
+26700 TBB
+19600 GQD
+21370 GYA
+37500 TFK
+15100 HWU
+19700 UGE
+14600 UVA
+30300 UGKZ
+18100 UFQE
+15000 UIK
+!EOF!
+
+station=`grep $freq	tbl$$|sed -e 's/.* //'`
+rm -f tbl$$
+
+if [ @$station@ = "@@" -a @$3@ = "@@" ]
+then
+	echo Cant find $freq in frequency list and station name not supplied
+	exit
+fi
+
+if [ @$station@ = "@@" ]
+then
+	station=$3
+fi
+
+cwd=`pwd`
+
+cd $HOME/sid_data
+
+TZ=UTC0
+export TZ
+
+if [ $DATE = "NONE" ]
+then
+	fname=`date +%Y%m%d`
+	siddate=`date +%Y-%m-%d`
+else
+	fname="${YEAR}${MONTH}${DAY}"
+	siddate="${YEAR}-${MONTH}-${DAY}"
+fi
+
+sidfname=`echo ${SITE}_${station}_${siddate}.csv`
+sidconvert <chan${chan}-$fname.dat >tmp$$
+
+max=`grep MAXIMUM tmp$$|sed -e 's/MAXIMUM *//'`
+min=`grep MINIMUM tmp$$|sed -e 's/MINIMUM *//'`
+
+grep -v IMUM tmp$$ >chan${chan}-$fname.tmp
+
+first=`head -1 chan${chan}-$fname.tmp|sed -e 's/,.*$//'`
+last=`tail -1 chan${chan}-$fname.tmp|sed -e 's/,.*$//'`
+
+rm -f tmp$$
+
+cat >$cwd/$sidfname <<!EOF!
+# Site = $SITE
+# Longitude = $LONGITUDE
+# Latitude = $LATITUDE
+#
+# UTC_Offset = $UTC_OFFSET
+# TimeZone = $TIMEZONE
+#
+# UTC_StartTime = $first
+# StationID = $station
+# Frequency = $freq
+# MonitorID = $MONITORID
+# SampleRate = 5
+# Contact $EMAIL
+# UTC_EndTime = $last
+# DataMin=$min
+# DataMax=$max
+!EOF!
+
+cat chan${chan}-$fname.tmp >>$cwd/$sidfname
+rm -f chan${chan}-$fname.tmp
+
+cd $cwd
+echo -n Shipping $sidfname to $FTPSERVER ...
+ftp -n $FTPSERVER <<END_SCRIPT
+quote USER $FTPUSER
+quote PASS $PASS
+cd $DIRECTORY
+put $sidfname
+quit
+END_SCRIPT
+echo Done
+
+

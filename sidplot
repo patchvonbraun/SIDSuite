@@ -1,0 +1,118 @@
+#!/bin/sh
+COMB=NONE
+fcnt=0
+while [ "@@" != "@$1@" ]; do
+	case "$1" in
+		-combine|-c)
+			COMB=yes
+			shift
+		;;
+		
+		-h|-help)
+		echo "Usage: sidplot [-c|-combine] files"
+		echo "   filenames MUST be of the form filename.suffix"
+		exit
+		;;
+		
+		-?*)
+			echo "Unknown option" $1
+			exit
+			;;
+		
+		-)
+			;;
+			
+		*.*) 
+		files="$files $1"
+		fcnt=`expr $fcnt + 1`
+		shift
+		;;
+		
+		*)
+		echo "Invalid filename parameter: " $1
+		exit
+		;;
+	esac
+done
+
+if [ $fcnt -lt 1 ]
+then
+	cat >tmp$$
+	files=tmp$$
+	base=tmp$$
+fi
+
+if [ $COMB = "NONE" ]
+then
+	for file in `echo $files`
+	do
+		if [ ! -e $file ]
+		then
+			echo File: $file does not exist
+		else
+			somefiles="yes"
+			base=`echo $file|sed -e 's/\..*$//'`
+			gnuplot >/dev/null 2>&1 <<!EOF!
+			set terminal png size 1000,600
+			set output '$base.png'
+			set title 'VLF Received Signal Strength: $base'
+			set xlabel 'Date/Time(UTC)'
+			set ylabel 'Signal Level'
+			set xdata time
+			set timefmt "%s"
+			set format x "%m/%d\\n%H:%M"
+			set grid
+			plot '$file' using 1:2 with lines
+!EOF!
+			if [ $base != tmp$$ ]
+			then
+				echo Plot for $file is available in $base.png
+			else
+				cat tmp$$.png
+				rm -f tmp$$ tmp$$.png
+			fi
+		fi
+	done
+	if [ "@$somefiles@" = "@@" ]
+	then
+		echo None of the specified files exist--exiting
+		exit
+	fi
+
+else
+
+	for file in `echo $files`
+	do
+		if [ -e $file ]
+		then
+			base=`echo $file|sed -e 's/\..*$//'`
+			bases="$bases $base"
+			basefn="${basefn}_$base"
+			plotcmd="$plotcmd, '$file' using 1:2 with lines"
+		else
+			echo File: $file does not exist
+		fi
+	done
+	if [ "@$bases@" = "@@" ]
+	then
+		echo None of the specified files exist--exiting
+		exit
+	fi
+	plotcmd="plot $plotcmd"
+	plotcmd=`echo $plotcmd|sed -e 's/plot , /plot /'`
+	basefn=`echo $basefn|sed -e 's/^_//'`
+	bases=`echo $bases|tr '[a-z]' '[A-Z]'`
+	gnuplot >/dev/null 2>&1 <<!EOF!
+	set terminal png size 1000,600
+	set output '$basefn.png'
+	set title 'VLF Received Signal Strength: $bases'
+	set xlabel 'Date/Time(UTC)'
+	set ylabel 'Signal Level'
+	set xdata time
+	set timefmt "%s"
+	set format x "%m/%d\\n%H:%M"
+	set grid
+	$plotcmd
+!EOF!
+	echo Plot for `echo $files` is available in $basefn.png
+fi

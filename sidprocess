@@ -1,0 +1,107 @@
+#!/bin/bash
+convtime()
+{
+	converted_time=ERROR
+	good=nope
+	case "$intime" in
+	[12][0-9][0-9][0-9]-[01][0-9]-[0-3][0-9]\ [0-2][0-9]:[0-5][0-9])
+		good=yup
+		;;
+	*)
+	converted_time=ERROR
+	;;
+
+	esac
+	TZ=UTC0
+	export TZ
+	if [ $good = yup ]
+	then
+	python >tmp$$ <<!EOF!
+import time
+print int(time.mktime(time.strptime('$intime', "%Y-%m-%d %H:%M")))
+!EOF!
+	converted_time=`cat tmp$$`
+	rm -f tmp$$
+	fi
+}
+
+BTIM=90
+SRATE=8
+OUTFILE=""
+files=""
+ST_TIME=0
+EN_TIME=0
+while [ "@@" != "@$1@" ]; do
+	case "$1" in
+		-b|-btime)
+			BTIM=$2
+			shift 2
+		;;
+		-s|-srate)
+			SRATE=$2
+			shift 2
+			;;
+		-f|-out)
+			OUTFILE=$2
+			shift 2
+			;;
+		
+		-h|-help)
+			echo "Usage: sidprocess [options] files"
+			echo "  Options:"
+			cat <<!EOF!
+       -s|-srate   set sample rate (in Hz) of input data: default is 8
+       -f|-out     set output filename: default is 'channel_output'
+       -b|-btime   set averaging period: default is 90
+       -start      set starting time of processing: YYYY-MM-DD HH:MM
+       -end        set ending time of processing: YYYY-MM-DD HH:MM
+!EOF!
+			exit
+			;;
+			
+		-start)
+			intime="$2"
+			convtime
+			if [ $converted_time = ERROR ]
+			then
+				echo Invalid time format: must be YYYY-MM-DD HH:MM
+				exit
+			fi
+			shift 2
+			ST_TIME=$converted_time
+			;;
+			
+		-end)
+			intime="$2"
+			convtime
+			if [ $converted_time = ERROR ]
+			then
+				echo Invalid time foramt: must be YYYY-MM-DD HH:MM
+			fi
+			shift 2
+			EN_TIME=$converted_time
+			;;
+		
+		-*)
+			echo Unknown option: $1
+			exit
+			;;
+		*) 
+		files="$files $1"
+		shift
+		;;
+	esac
+done
+if [ "@@" = "@$files@" ]
+then
+	echo "You must specify at least one file for processing"
+	exit
+fi
+if [ "@$OUTFILE@" != "@@" -a "$OUTFILE" != "-" ]
+then
+	awk -f $HOME/bin/sidprocess_new.awk \
+	BTIM=$BTIM SRATE=$SRATE ST_TIME=$ST_TIME EN_TIME=$EN_TIME $files >$OUTFILE
+else
+	awk -f $HOME/bin/sidprocess_new.awk \
+	BTIM=$BTIM SRATE=$SRATE ST_TIME=$ST_TIME EN_TIME=$EN_TIME $files
+fi

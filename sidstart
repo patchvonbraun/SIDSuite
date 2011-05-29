@@ -1,0 +1,286 @@
+#!/bin/bash
+#
+# Tunable parameters for the receiver
+#
+# Sample rate--no reason to change this
+#
+
+killem ()
+{
+	kill $synproc >/dev/null 2>&1
+	kill $sidhproc >/dev/null 2>&1
+	killall synoptic_reader >/dev/null 2>&1
+	killall sidhandler >/dev/null 2>&1
+	exit
+}
+SRATE=96000
+#
+# Channel bandwidth -- good for FSK/MSK signals
+#
+BANDWIDTH=300
+
+#
+# Post source gain
+#
+GAIN=1
+
+#
+# Full GUI, 4 channels, single-channel demod, complex synoptic output
+#
+TYPE=full
+
+
+
+#
+# We keep 1-in-$SYN_RATIO baseband samples
+#
+SYN_RATIO=10
+
+#
+# Post-detector integration time, seconds
+#
+INTEG=5
+
+HWNAME=plughw:0,0
+OHWNAME=hw:1,0
+
+AWID=2.0e3
+ASTART=23.0e3
+
+#
+# Which channel for demodulation (full version only!)
+#
+DEMOD_CHAN=-1
+
+NET=no
+NETCHAN=0
+NETSEND=no
+COMPRESS=no
+HZ=60
+
+if [ -e $HOME/.sidconfig ]
+then
+	. $HOME/.sidconfig
+fi
+
+#
+# Parse options
+#
+while [ "@@" != "@$1@" ]; do
+	case "$1" in
+	
+		-gain|-g)
+		GAIN=$2
+		shift 2
+		;;
+		
+		-r|-rate|-srate)
+		SRATE=$2
+		shift 2
+		;;
+		
+		-ratio)
+		SYN_RATIO=$2
+		shift 2
+		;;
+		
+		-integ|-i)
+		INTEG=$2
+		shift 2
+		;;
+		
+		-hw|-I|-hardware|-device)
+		HWNAME=$2
+		shift 2
+		;;
+		
+		-ohw|-O|-odevice|-ohardware)
+		OHWNAME=$2
+		shift 2
+		;;
+
+		-hz)
+		HZ=$2
+		shift 2
+		;;
+		
+		-h|-help)
+		cat <<"!EOF!"
+Usage: sidstart [options] freq1 freq2 freq3 freq4
+
+-x|-slow|-sheeva      run on slower platform
+-gain|-g              set gain
+-r|-rate|-srate       sample rate: 96000 or 192000 is typical
+-ratio                synoptic sampling ratio: 10 to 30 is typical
+-i|-integ             integration time, in seconds 5 to 10 is typical
+-hw|-I|-hardware      which soundcard hardware to use for input: plughw:0,0 etc
+-ohw|-O|-ohardware    which soundcard hardware to use for output: plughw:1,0 etc
+-hz                   local power line frequency: 60 or 50 are typical
+!EOF!
+		shift
+		exit
+		;;
+   
+   
+		
+		[0123456789][.0123456789]*)
+		plist=`echo $plist $1`
+		shift
+		;;
+		
+		*)
+		echo Unknown parameter: $1
+		exit
+	esac
+done
+
+#
+# Number of samples in a synoptic baseband sample
+#
+# Two seconds worth
+SYN_LEN=`expr $SRATE '*' 2`
+
+#
+# Shouldn't need to touch anything below here
+#
+PATH=$PATH:$HOME/bin:.
+export PATH
+
+P=2.6
+python -V 2>tmp$$
+pv=`cat tmp$$|sed -e 's/Python  *//'`
+rm -f tmp$$
+
+case $pv in
+	2.6*)
+		P=2.6
+		;;
+	2.7*)
+		P=2.7
+		;;
+esac
+
+M=""
+
+if [ -f /etc/fedora-release ]
+then
+	if [ `uname -m` = x86_64 ]
+	then
+		M=64
+	fi
+fi
+
+PYTHONPATH=/usr/local/lib${M}/python${P}/site-packages
+PYTHONPATH=$PYTHONPATH:/usr/local/lib${M}/python${P}/dist-packages:$HOME/bin:.
+
+
+export PYTHONPATH
+
+if [ ! -d $HOME/sid_data ]
+then
+	mkdir $HOME/sid_data
+fi
+
+cd $HOME/sid_data
+
+#
+# Set our freq list
+#
+flist=""
+cchan=0
+if [ "@$plist@" != "@@" ]
+then
+	cchan=1
+	list=""
+	flist=""
+	for freq in `echo $plist`
+	do
+		flist=`echo $flist --f${cchan} $freq `
+		cchan=`expr $cchan + 1`
+		check=`echo $freq|awk '
+			/./ {if ($1 > (SRATE/2.1)) print "BAD"
+				 else if ($1 < BW/2) print "BAD"
+				 else print "OK"
+			 }' SRATE=$SRATE BW=$BANDWIDTH`
+		if [ $check = "BAD" ]
+		then
+			echo "Frequency of" $freq "is invalid for sample rate of" $SRATE "and bandwidth" $BANDWIDTH
+			echo "Try frequencies between" `expr $BANDWIDTH / 2` "and" `expr $SRATE / 2 - '(' $SRATE / 20 ')'`
+			exit
+		fi
+	done
+elif [ "@$F0@" != "@@" ]
+then
+	flist="--f1 $F0 --f2 $F1 --f3 $F2 --f4 $F3 --f5 $F4 --f6 $F5 "
+	cchan=6
+fi
+
+
+if [ $cchan -gt 7 ]
+then
+	echo Too many channels specified for regular version
+	exit
+fi
+
+#
+# Destroy previous FIFOs (named pipes)
+#
+rm -f sid_ch?.dat sid_total.dat
+rm -f synoptic_output
+
+#
+# Make FIFOS
+#
+mkfifo sid_ch1.dat sid_ch2.dat sid_ch3.dat sid_ch4.dat sid_ch5.dat sid_ch6.dat
+mkfifo synoptic_output
+
+#
+# Startup up readers for the FIFO files
+#
+
+#
+# Reader for full processes four channels, otherwise two channels
+#
+if [ "@" = "@" ]
+then
+
+	if [ $TYPE = "full" -o $TYPE = "FULL" ]
+	then
+		sidhandler sid_ch1.dat sid_ch2.dat sid_ch3.dat sid_ch4.dat sid_ch5.dat sid_ch6.dat &
+	else
+		sidhandler sid_ch1.dat sid_ch2.dat &
+	fi
+
+	sidhproc=$!
+
+	#
+	# Full version uses complex-float, while "slow" version uses real-float
+	#  so we have to fool synpotic_reader into "doing the right thing"
+	#
+	if [ $TYPE = "full" -o $TYPE = "FULL" ]
+	then
+		synoptic_reader synoptic_output $SYN_LEN &
+	else
+		synoptic_reader synoptic_output $SRATE &
+	fi
+
+	synproc=$!
+fi
+	
+if [ $TYPE = "full" -o TYPE = "FULL" ]
+then
+		FILE=sidAudioFifo-0
+		rm -f $FILE
+		mkfifo $FILE
+		
+		trap 'killem' ERR
+		trap 'killem' 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20
+		audioSIDnetRcvr.py --filename $FILE --samp-rate $SRATE  \
+		--synoptic-ratio $SYN_RATIO --synoptic-length $SYN_LEN \
+		`echo $flist` \
+		 --integ $INTEG --hz $HZ --igain $GAIN --ohwname $OHWNAME --hwname $HWNAME \
+		--audio-shift $ASTART --audio-width $AWID --cfn $HOME/.sidconfig
+fi
+
+kill $synproc >/dev/null 2>&1
+kill $sidhproc >/dev/null 2>&1
