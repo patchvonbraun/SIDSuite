@@ -4,7 +4,7 @@
 # Title: Sudden Ionospheric Disturbance Receiver
 # Author: Marcus Leech, Science Radio Laboratories, Inc
 # Description: Six channel SID receiver, use with audio I/O
-# Generated: Mon Jan  3 23:59:46 2011
+# Generated: Fri Jul  1 14:19:07 2011
 ##################################################
 
 from gnuradio import audio
@@ -55,10 +55,8 @@ class audioSIDnetRcvr(grc_wxgui.top_block_gui):
 		##################################################
 		# Variables
 		##################################################
-		self.msk_baud = msk_baud = 200
 		self.width = width = audio_width
 		self.start_freq = start_freq = audio_shift
-		self.msk_width = msk_width = (msk_baud*1.5)
 		self.integration = integration = integ
 		self.chan6_freq = chan6_freq = f6
 		self.chan5_freq = chan5_freq = f5
@@ -69,42 +67,15 @@ class audioSIDnetRcvr(grc_wxgui.top_block_gui):
 		self.sidvars = sidvars = sidsuite.variables(cfn,chan1_freq,chan2_freq,chan3_freq,chan4_freq,chan5_freq,chan6_freq,integration,0,0,igain,width,start_freq)
 		self.converter_taps = converter_taps = gr.firdes.low_pass(1.0,samp_rate,width,width/5,gr.firdes.WIN_HAMMING)
 		self.channel_taps = channel_taps = gr.firdes.low_pass(1750.0,samp_rate,300,45,gr.firdes.WIN_HAMMING)
-		self.cbw = cbw = msk_width
+		self.cbw = cbw = 400
 
 		##################################################
-		# Notebooks
+		# Blocks
 		##################################################
-		self.MainNotebook = wx.Notebook(self.GetWin(), style=wx.NB_TOP)
+		self.MainNotebook = self.MainNotebook = wx.Notebook(self.GetWin(), style=wx.NB_TOP)
 		self.MainNotebook.AddPage(grc_wxgui.Panel(self.MainNotebook), "Main")
 		self.MainNotebook.AddPage(grc_wxgui.Panel(self.MainNotebook), "Spectral")
 		self.Add(self.MainNotebook)
-
-		##################################################
-		# Controls
-		##################################################
-		_width_sizer = wx.BoxSizer(wx.VERTICAL)
-		self._width_text_box = forms.text_box(
-			parent=self.MainNotebook.GetPage(0).GetWin(),
-			sizer=_width_sizer,
-			value=self.width,
-			callback=self.set_width,
-			label="Audio Capture Width",
-			converter=forms.float_converter(),
-			proportion=0,
-		)
-		self._width_slider = forms.slider(
-			parent=self.MainNotebook.GetPage(0).GetWin(),
-			sizer=_width_sizer,
-			value=self.width,
-			callback=self.set_width,
-			minimum=300,
-			maximum=14.3e3,
-			num_steps=140,
-			style=wx.SL_HORIZONTAL,
-			cast=float,
-			proportion=1,
-		)
-		self.MainNotebook.GetPage(0).Add(_width_sizer)
 		_start_freq_sizer = wx.BoxSizer(wx.VERTICAL)
 		self._start_freq_text_box = forms.text_box(
 			parent=self.MainNotebook.GetPage(0).GetWin(),
@@ -199,83 +170,21 @@ class audioSIDnetRcvr(grc_wxgui.top_block_gui):
 			converter=forms.float_converter(),
 		)
 		self.MainNotebook.GetPage(0).Add(self._chan1_freq_text_box)
-
-		##################################################
-		# Blocks
-		##################################################
-		self.MyScopeSink = scopesink2.scope_sink_f(
-			self.MainNotebook.GetPage(0).GetWin(),
-			title="Rx Channels RMS Power",
-			sample_rate=2,
-			v_scale=10,
-			v_offset=250,
-			t_scale=450.0,
-			ac_couple=False,
-			xy_mode=False,
-			num_inputs=6,
-			trig_mode=gr.gr_TRIG_MODE_STRIPCHART,
-			y_axis_label="Detected Power",
-			size=((700,500)),
+		self.wxgui_waterfallsink2_0 = waterfallsink2.waterfall_sink_f(
+			self.MainNotebook.GetPage(1).GetWin(),
+			baseband_freq=0,
+			dynamic_range=50,
+			ref_level=45,
+			ref_scale=2.0,
+			sample_rate=samp_rate,
+			fft_size=2048,
+			fft_rate=3,
+			average=True,
+			avg_alpha=0.03,
+			title="Spectrogram",
+			size=((800,400)),
 		)
-		self.MainNotebook.GetPage(0).Add(self.MyScopeSink.win)
-		self.audio_sink_0 = audio.sink(int(samp_rate/2), ohwname, True)
-		self.audio_source_0 = audio.source(samp_rate, hwname, True)
-		self.gr_agc2_xx_0 = gr.agc2_ff(1e-4, 3e-5, 0.75, 0.75, 0.75)
-		self.gr_complex_to_mag_0 = gr.complex_to_mag(1)
-		self.gr_complex_to_mag_0_0 = gr.complex_to_mag(1)
-		self.gr_complex_to_mag_0_0_0 = gr.complex_to_mag(1)
-		self.gr_complex_to_mag_0_0_0_0 = gr.complex_to_mag(1)
-		self.gr_complex_to_mag_0_0_0_0_0 = gr.complex_to_mag(1)
-		self.gr_complex_to_mag_0_0_0_0_0_0 = gr.complex_to_mag(1)
-		self.gr_complex_to_real_0 = gr.complex_to_real(1)
-		self.gr_complex_to_real_1 = gr.complex_to_real(1)
-		self.gr_complex_to_real_2 = gr.complex_to_real(1)
-		self.gr_fft_filter_xxx_0 = gr.fft_filter_ccc(1, (notchfilt.notch_taps(samp_rate,hz,(samp_rate/2)/hz)))
-		self.gr_file_sink_1_0 = gr.file_sink(gr.sizeof_float*1, "sid_ch1.dat")
-		self.gr_file_sink_1_0.set_unbuffered(True)
-		self.gr_file_sink_1_0_0 = gr.file_sink(gr.sizeof_float*1, "sid_ch2.dat")
-		self.gr_file_sink_1_0_0.set_unbuffered(True)
-		self.gr_file_sink_1_0_0_0 = gr.file_sink(gr.sizeof_float*1, "sid_ch3.dat")
-		self.gr_file_sink_1_0_0_0.set_unbuffered(True)
-		self.gr_file_sink_1_0_0_0_0 = gr.file_sink(gr.sizeof_float*1, "sid_ch4.dat")
-		self.gr_file_sink_1_0_0_0_0.set_unbuffered(True)
-		self.gr_file_sink_1_0_0_0_0_0 = gr.file_sink(gr.sizeof_float*1, "sid_ch5.dat")
-		self.gr_file_sink_1_0_0_0_0_0.set_unbuffered(True)
-		self.gr_file_sink_1_0_0_0_0_0_0 = gr.file_sink(gr.sizeof_float*1, "sid_ch6.dat")
-		self.gr_file_sink_1_0_0_0_0_0_0.set_unbuffered(True)
-		self.gr_file_sink_4 = gr.file_sink(gr.sizeof_gr_complex*synoptic_length, "synoptic_output")
-		self.gr_file_sink_4.set_unbuffered(False)
-		self.gr_freq_xlating_fir_filter_xxx_0 = gr.freq_xlating_fir_filter_ccc(2, (converter_taps), -1*(start_freq), samp_rate)
-		self.gr_goertzel_fc_0 = gr.goertzel_fc(samp_rate, int(samp_rate/200), chan1_freq)
-		self.gr_goertzel_fc_1 = gr.goertzel_fc(samp_rate, int(samp_rate/200), chan2_freq)
-		self.gr_goertzel_fc_1_0 = gr.goertzel_fc(samp_rate, int(samp_rate/200), chan3_freq)
-		self.gr_goertzel_fc_1_0_0 = gr.goertzel_fc(samp_rate, int(samp_rate/200), chan4_freq)
-		self.gr_goertzel_fc_1_0_0_0 = gr.goertzel_fc(samp_rate, int(samp_rate/200), chan5_freq)
-		self.gr_goertzel_fc_1_0_0_0_0 = gr.goertzel_fc(samp_rate, int(samp_rate/200), chan6_freq)
-		self.gr_hilbert_fc_0 = gr.hilbert_fc(32)
-		self.gr_keep_one_in_n_0 = gr.keep_one_in_n(gr.sizeof_float*1, 20)
-		self.gr_keep_one_in_n_0_0 = gr.keep_one_in_n(gr.sizeof_float*1, 20)
-		self.gr_keep_one_in_n_0_0_0 = gr.keep_one_in_n(gr.sizeof_float*1, 20)
-		self.gr_keep_one_in_n_0_0_0_0 = gr.keep_one_in_n(gr.sizeof_float*1, 20)
-		self.gr_keep_one_in_n_0_0_0_0_0 = gr.keep_one_in_n(gr.sizeof_float*1, 20)
-		self.gr_keep_one_in_n_0_0_0_0_0_0 = gr.keep_one_in_n(gr.sizeof_float*1, 20)
-		self.gr_keep_one_in_n_0_0_0_0_1 = gr.keep_one_in_n(gr.sizeof_float*1, 100)
-		self.gr_keep_one_in_n_0_0_0_0_1_0 = gr.keep_one_in_n(gr.sizeof_float*1, 100)
-		self.gr_keep_one_in_n_0_0_0_0_1_0_0 = gr.keep_one_in_n(gr.sizeof_float*1, 100)
-		self.gr_keep_one_in_n_0_0_0_0_1_0_0_0 = gr.keep_one_in_n(gr.sizeof_float*1, 100)
-		self.gr_keep_one_in_n_0_0_0_0_1_0_0_0_0 = gr.keep_one_in_n(gr.sizeof_float*1, 100)
-		self.gr_keep_one_in_n_0_0_0_0_1_0_0_0_1 = gr.keep_one_in_n(gr.sizeof_float*1, 100)
-		self.gr_keep_one_in_n_1 = gr.keep_one_in_n(gr.sizeof_gr_complex*synoptic_length, synoptic_ratio)
-		self.gr_multiply_const_vxx_0 = gr.multiply_const_vff((igain, ))
-		self.gr_multiply_const_vxx_1 = gr.multiply_const_vff((0.125, ))
-		self.gr_multiply_const_vxx_2 = gr.multiply_const_vcc((100, ))
-		self.gr_single_pole_iir_filter_xx_0 = gr.single_pole_iir_filter_ff(1.0/(integration*200), 1)
-		self.gr_single_pole_iir_filter_xx_0_0 = gr.single_pole_iir_filter_ff(1.0/(integration*200), 1)
-		self.gr_single_pole_iir_filter_xx_0_0_0 = gr.single_pole_iir_filter_ff(1.0/(integration*200), 1)
-		self.gr_single_pole_iir_filter_xx_0_0_0_0 = gr.single_pole_iir_filter_ff(1.0/(integration*200), 1)
-		self.gr_single_pole_iir_filter_xx_0_0_0_0_0 = gr.single_pole_iir_filter_ff(1.0/(integration*200), 1)
-		self.gr_single_pole_iir_filter_xx_0_0_0_0_0_0 = gr.single_pole_iir_filter_ff(1.0/(integration*200), 1)
-		self.gr_stream_to_vector_0 = gr.stream_to_vector(gr.sizeof_gr_complex*1, synoptic_length)
+		self.MainNotebook.GetPage(1).Add(self.wxgui_waterfallsink2_0.win)
 		self.wxgui_fftsink2_0 = fftsink2.fft_sink_f(
 			self.MainNotebook.GetPage(1).GetWin(),
 			baseband_freq=0,
@@ -293,21 +202,102 @@ class audioSIDnetRcvr(grc_wxgui.top_block_gui):
 			size=((800,400)),
 		)
 		self.MainNotebook.GetPage(1).Add(self.wxgui_fftsink2_0.win)
-		self.wxgui_waterfallsink2_0 = waterfallsink2.waterfall_sink_f(
-			self.MainNotebook.GetPage(1).GetWin(),
-			baseband_freq=0,
-			dynamic_range=50,
-			ref_level=45,
-			ref_scale=2.0,
-			sample_rate=samp_rate,
-			fft_size=2048,
-			fft_rate=3,
-			average=True,
-			avg_alpha=0.03,
-			title="Spectrogram",
-			size=((800,400)),
+		_width_sizer = wx.BoxSizer(wx.VERTICAL)
+		self._width_text_box = forms.text_box(
+			parent=self.MainNotebook.GetPage(0).GetWin(),
+			sizer=_width_sizer,
+			value=self.width,
+			callback=self.set_width,
+			label="Audio Capture Width",
+			converter=forms.float_converter(),
+			proportion=0,
 		)
-		self.MainNotebook.GetPage(1).Add(self.wxgui_waterfallsink2_0.win)
+		self._width_slider = forms.slider(
+			parent=self.MainNotebook.GetPage(0).GetWin(),
+			sizer=_width_sizer,
+			value=self.width,
+			callback=self.set_width,
+			minimum=300,
+			maximum=14.3e3,
+			num_steps=140,
+			style=wx.SL_HORIZONTAL,
+			cast=float,
+			proportion=1,
+		)
+		self.MainNotebook.GetPage(0).Add(_width_sizer)
+		self.gr_stream_to_vector_0 = gr.stream_to_vector(gr.sizeof_gr_complex*1, synoptic_length)
+		self.gr_single_pole_iir_filter_xx_0_0_0_0_0_0 = gr.single_pole_iir_filter_ff(1.0/(integration*200), 1)
+		self.gr_single_pole_iir_filter_xx_0_0_0_0_0 = gr.single_pole_iir_filter_ff(1.0/(integration*200), 1)
+		self.gr_single_pole_iir_filter_xx_0_0_0_0 = gr.single_pole_iir_filter_ff(1.0/(integration*200), 1)
+		self.gr_single_pole_iir_filter_xx_0_0_0 = gr.single_pole_iir_filter_ff(1.0/(integration*200), 1)
+		self.gr_single_pole_iir_filter_xx_0_0 = gr.single_pole_iir_filter_ff(1.0/(integration*200), 1)
+		self.gr_single_pole_iir_filter_xx_0 = gr.single_pole_iir_filter_ff(1.0/(integration*200), 1)
+		self.gr_multiply_const_vxx_2 = gr.multiply_const_vcc((100, ))
+		self.gr_multiply_const_vxx_1 = gr.multiply_const_vff((0.125, ))
+		self.gr_multiply_const_vxx_0 = gr.multiply_const_vff((igain, ))
+		self.gr_keep_one_in_n_1 = gr.keep_one_in_n(gr.sizeof_gr_complex*synoptic_length, synoptic_ratio)
+		self.gr_keep_one_in_n_0_0_0_0_1_0_0_0_1 = gr.keep_one_in_n(gr.sizeof_float*1, cbw/2)
+		self.gr_keep_one_in_n_0_0_0_0_1_0_0_0_0 = gr.keep_one_in_n(gr.sizeof_float*1, cbw/2)
+		self.gr_keep_one_in_n_0_0_0_0_1_0_0_0 = gr.keep_one_in_n(gr.sizeof_float*1, cbw/2)
+		self.gr_keep_one_in_n_0_0_0_0_1_0_0 = gr.keep_one_in_n(gr.sizeof_float*1, cbw/2)
+		self.gr_keep_one_in_n_0_0_0_0_1_0 = gr.keep_one_in_n(gr.sizeof_float*1, cbw/2)
+		self.gr_keep_one_in_n_0_0_0_0_1 = gr.keep_one_in_n(gr.sizeof_float*1, cbw/2)
+		self.gr_keep_one_in_n_0_0_0_0_0_0 = gr.keep_one_in_n(gr.sizeof_float*1, cbw/10)
+		self.gr_keep_one_in_n_0_0_0_0_0 = gr.keep_one_in_n(gr.sizeof_float*1, cbw/10)
+		self.gr_keep_one_in_n_0_0_0_0 = gr.keep_one_in_n(gr.sizeof_float*1, cbw/10)
+		self.gr_keep_one_in_n_0_0_0 = gr.keep_one_in_n(gr.sizeof_float*1, cbw/10)
+		self.gr_keep_one_in_n_0_0 = gr.keep_one_in_n(gr.sizeof_float*1, cbw/10)
+		self.gr_keep_one_in_n_0 = gr.keep_one_in_n(gr.sizeof_float*1, cbw/10)
+		self.gr_hilbert_fc_0 = gr.hilbert_fc(32)
+		self.gr_goertzel_fc_1_0_0_0_0 = gr.goertzel_fc(samp_rate, int(samp_rate/cbw), chan6_freq)
+		self.gr_goertzel_fc_1_0_0_0 = gr.goertzel_fc(samp_rate, int(samp_rate/cbw), chan5_freq)
+		self.gr_goertzel_fc_1_0_0 = gr.goertzel_fc(samp_rate, int(samp_rate/cbw), chan4_freq)
+		self.gr_goertzel_fc_1_0 = gr.goertzel_fc(samp_rate, int(samp_rate/cbw), chan3_freq)
+		self.gr_goertzel_fc_1 = gr.goertzel_fc(samp_rate, int(samp_rate/cbw), chan2_freq)
+		self.gr_goertzel_fc_0 = gr.goertzel_fc(samp_rate, int(samp_rate/cbw), chan1_freq)
+		self.gr_freq_xlating_fir_filter_xxx_0 = gr.freq_xlating_fir_filter_ccc(2, (converter_taps), -1*(start_freq), samp_rate)
+		self.gr_file_sink_4 = gr.file_sink(gr.sizeof_gr_complex*synoptic_length, "synoptic_output")
+		self.gr_file_sink_4.set_unbuffered(False)
+		self.gr_file_sink_1_0_0_0_0_0_0 = gr.file_sink(gr.sizeof_float*1, "sid_ch6.dat")
+		self.gr_file_sink_1_0_0_0_0_0_0.set_unbuffered(True)
+		self.gr_file_sink_1_0_0_0_0_0 = gr.file_sink(gr.sizeof_float*1, "sid_ch5.dat")
+		self.gr_file_sink_1_0_0_0_0_0.set_unbuffered(True)
+		self.gr_file_sink_1_0_0_0_0 = gr.file_sink(gr.sizeof_float*1, "sid_ch4.dat")
+		self.gr_file_sink_1_0_0_0_0.set_unbuffered(True)
+		self.gr_file_sink_1_0_0_0 = gr.file_sink(gr.sizeof_float*1, "sid_ch3.dat")
+		self.gr_file_sink_1_0_0_0.set_unbuffered(True)
+		self.gr_file_sink_1_0_0 = gr.file_sink(gr.sizeof_float*1, "sid_ch2.dat")
+		self.gr_file_sink_1_0_0.set_unbuffered(True)
+		self.gr_file_sink_1_0 = gr.file_sink(gr.sizeof_float*1, "sid_ch1.dat")
+		self.gr_file_sink_1_0.set_unbuffered(True)
+		self.gr_fft_filter_xxx_0 = gr.fft_filter_ccc(1, (notchfilt.notch_taps(samp_rate,hz,(samp_rate/2)/hz)))
+		self.gr_complex_to_real_2 = gr.complex_to_real(1)
+		self.gr_complex_to_real_1 = gr.complex_to_real(1)
+		self.gr_complex_to_real_0 = gr.complex_to_real(1)
+		self.gr_complex_to_mag_0_0_0_0_0_0 = gr.complex_to_mag(1)
+		self.gr_complex_to_mag_0_0_0_0_0 = gr.complex_to_mag(1)
+		self.gr_complex_to_mag_0_0_0_0 = gr.complex_to_mag(1)
+		self.gr_complex_to_mag_0_0_0 = gr.complex_to_mag(1)
+		self.gr_complex_to_mag_0_0 = gr.complex_to_mag(1)
+		self.gr_complex_to_mag_0 = gr.complex_to_mag(1)
+		self.gr_agc2_xx_0 = gr.agc2_ff(1e-4, 3e-5, 0.75, 0.75, 0.75)
+		self.audio_source_0 = audio.source(samp_rate, hwname, True)
+		self.audio_sink_0 = audio.sink(int(samp_rate/2), ohwname, True)
+		self.MyScopeSink = scopesink2.scope_sink_f(
+			self.MainNotebook.GetPage(0).GetWin(),
+			title="Rx Channels RMS Power",
+			sample_rate=2,
+			v_scale=10,
+			v_offset=250,
+			t_scale=450.0,
+			ac_couple=False,
+			xy_mode=False,
+			num_inputs=6,
+			trig_mode=gr.gr_TRIG_MODE_STRIPCHART,
+			y_axis_label="Detected Power",
+			size=((700,500)),
+		)
+		self.MainNotebook.GetPage(0).Add(self.MyScopeSink.win)
 
 		##################################################
 		# Connections
@@ -336,7 +326,6 @@ class audioSIDnetRcvr(grc_wxgui.top_block_gui):
 		self.connect((self.gr_agc2_xx_0, 0), (self.gr_multiply_const_vxx_1, 0))
 		self.connect((self.gr_multiply_const_vxx_1, 0), (self.audio_sink_0, 0))
 		self.connect((self.gr_single_pole_iir_filter_xx_0, 0), (self.gr_keep_one_in_n_0_0_0_0_1, 0))
-		self.connect((self.gr_keep_one_in_n_0_0_0_0, 0), (self.gr_file_sink_1_0_0_0_0, 0))
 		self.connect((self.gr_keep_one_in_n_0, 0), (self.gr_file_sink_1_0, 0))
 		self.connect((self.gr_single_pole_iir_filter_xx_0, 0), (self.gr_keep_one_in_n_0, 0))
 		self.connect((self.gr_goertzel_fc_0, 0), (self.gr_complex_to_mag_0, 0))
@@ -370,34 +359,59 @@ class audioSIDnetRcvr(grc_wxgui.top_block_gui):
 		self.connect((self.gr_single_pole_iir_filter_xx_0_0_0_0_0_0, 0), (self.gr_keep_one_in_n_0_0_0_0_0_0, 0))
 		self.connect((self.gr_single_pole_iir_filter_xx_0_0_0_0_0, 0), (self.gr_keep_one_in_n_0_0_0_0_0, 0))
 		self.connect((self.gr_single_pole_iir_filter_xx_0_0_0_0_0, 0), (self.gr_keep_one_in_n_0_0_0_0_1_0_0_0_0, 0))
+		self.connect((self.gr_keep_one_in_n_0_0_0_0, 0), (self.gr_file_sink_1_0_0_0_0, 0))
+
+	def get_f4(self):
+		return self.f4
 
 	def set_f4(self, f4):
 		self.f4 = f4
 		self.set_chan4_freq(self.f4)
 
+	def get_f3(self):
+		return self.f3
+
 	def set_f3(self, f3):
 		self.f3 = f3
 		self.set_chan3_freq(self.f3)
+
+	def get_f2(self):
+		return self.f2
 
 	def set_f2(self, f2):
 		self.f2 = f2
 		self.set_chan2_freq(self.f2)
 
+	def get_f1(self):
+		return self.f1
+
 	def set_f1(self, f1):
 		self.f1 = f1
 		self.set_chan1_freq(self.f1)
+
+	def get_f5(self):
+		return self.f5
 
 	def set_f5(self, f5):
 		self.f5 = f5
 		self.set_chan5_freq(self.f5)
 
+	def get_f6(self):
+		return self.f6
+
 	def set_f6(self, f6):
 		self.f6 = f6
 		self.set_chan6_freq(self.f6)
 
+	def get_hz(self):
+		return self.hz
+
 	def set_hz(self, hz):
 		self.hz = hz
 		self.gr_fft_filter_xxx_0.set_taps((notchfilt.notch_taps(self.samp_rate,self.hz,(self.samp_rate/2)/self.hz)))
+
+	def get_samp_rate(self):
+		return self.samp_rate
 
 	def set_samp_rate(self, samp_rate):
 		self.samp_rate = samp_rate
@@ -405,54 +419,83 @@ class audioSIDnetRcvr(grc_wxgui.top_block_gui):
 		self.set_channel_taps(gr.firdes.low_pass(1750.0,self.samp_rate,300,45,gr.firdes.WIN_HAMMING))
 		self.wxgui_fftsink2_0.set_sample_rate(self.samp_rate)
 		self.wxgui_waterfallsink2_0.set_sample_rate(self.samp_rate)
-		self.gr_goertzel_fc_0.set_rate(self.samp_rate)
-		self.gr_goertzel_fc_1_0.set_rate(self.samp_rate)
-		self.gr_goertzel_fc_1.set_rate(self.samp_rate)
-		self.gr_goertzel_fc_1_0_0_0.set_rate(self.samp_rate)
 		self.gr_fft_filter_xxx_0.set_taps((notchfilt.notch_taps(self.samp_rate,self.hz,(self.samp_rate/2)/self.hz)))
-		self.gr_goertzel_fc_1_0_0_0_0.set_rate(self.samp_rate)
+		self.gr_goertzel_fc_0.set_rate(self.samp_rate)
+		self.gr_goertzel_fc_1.set_rate(self.samp_rate)
+		self.gr_goertzel_fc_1_0.set_rate(self.samp_rate)
 		self.gr_goertzel_fc_1_0_0.set_rate(self.samp_rate)
+		self.gr_goertzel_fc_1_0_0_0.set_rate(self.samp_rate)
+		self.gr_goertzel_fc_1_0_0_0_0.set_rate(self.samp_rate)
+
+	def get_integ(self):
+		return self.integ
 
 	def set_integ(self, integ):
 		self.integ = integ
 		self.set_integration(self.integ)
+
+	def get_igain(self):
+		return self.igain
 
 	def set_igain(self, igain):
 		self.igain = igain
 		self.set_sidvars(sidsuite.variables(self.cfn,self.chan1_freq,self.chan2_freq,self.chan3_freq,self.chan4_freq,self.chan5_freq,self.chan6_freq,self.integration,0,0,self.igain,self.width,self.start_freq))
 		self.gr_multiply_const_vxx_0.set_k((self.igain, ))
 
+	def get_audio_shift(self):
+		return self.audio_shift
+
 	def set_audio_shift(self, audio_shift):
 		self.audio_shift = audio_shift
 		self.set_start_freq(self.audio_shift)
+
+	def get_audio_width(self):
+		return self.audio_width
 
 	def set_audio_width(self, audio_width):
 		self.audio_width = audio_width
 		self.set_width(self.audio_width)
 
+	def get_synoptic_length(self):
+		return self.synoptic_length
+
 	def set_synoptic_length(self, synoptic_length):
 		self.synoptic_length = synoptic_length
+
+	def get_cfn(self):
+		return self.cfn
 
 	def set_cfn(self, cfn):
 		self.cfn = cfn
 		self.set_sidvars(sidsuite.variables(self.cfn,self.chan1_freq,self.chan2_freq,self.chan3_freq,self.chan4_freq,self.chan5_freq,self.chan6_freq,self.integration,0,0,self.igain,self.width,self.start_freq))
 
+	def get_filename(self):
+		return self.filename
+
 	def set_filename(self, filename):
 		self.filename = filename
+
+	def get_synoptic_ratio(self):
+		return self.synoptic_ratio
 
 	def set_synoptic_ratio(self, synoptic_ratio):
 		self.synoptic_ratio = synoptic_ratio
 		self.gr_keep_one_in_n_1.set_n(self.synoptic_ratio)
 
+	def get_ohwname(self):
+		return self.ohwname
+
 	def set_ohwname(self, ohwname):
 		self.ohwname = ohwname
+
+	def get_hwname(self):
+		return self.hwname
 
 	def set_hwname(self, hwname):
 		self.hwname = hwname
 
-	def set_msk_baud(self, msk_baud):
-		self.msk_baud = msk_baud
-		self.set_msk_width((self.msk_baud*1.5))
+	def get_width(self):
+		return self.width
 
 	def set_width(self, width):
 		self.width = width
@@ -461,6 +504,9 @@ class audioSIDnetRcvr(grc_wxgui.top_block_gui):
 		self._width_slider.set_value(self.width)
 		self._width_text_box.set_value(self.width)
 
+	def get_start_freq(self):
+		return self.start_freq
+
 	def set_start_freq(self, start_freq):
 		self.start_freq = start_freq
 		self.set_sidvars(sidsuite.variables(self.cfn,self.chan1_freq,self.chan2_freq,self.chan3_freq,self.chan4_freq,self.chan5_freq,self.chan6_freq,self.integration,0,0,self.igain,self.width,self.start_freq))
@@ -468,9 +514,8 @@ class audioSIDnetRcvr(grc_wxgui.top_block_gui):
 		self._start_freq_slider.set_value(self.start_freq)
 		self._start_freq_text_box.set_value(self.start_freq)
 
-	def set_msk_width(self, msk_width):
-		self.msk_width = msk_width
-		self.set_cbw(self.msk_width)
+	def get_integration(self):
+		return self.integration
 
 	def set_integration(self, integration):
 		self.integration = integration
@@ -484,11 +529,17 @@ class audioSIDnetRcvr(grc_wxgui.top_block_gui):
 		self.gr_single_pole_iir_filter_xx_0_0_0_0_0_0.set_taps(1.0/(self.integration*200))
 		self.gr_single_pole_iir_filter_xx_0_0_0_0_0.set_taps(1.0/(self.integration*200))
 
+	def get_chan6_freq(self):
+		return self.chan6_freq
+
 	def set_chan6_freq(self, chan6_freq):
 		self.chan6_freq = chan6_freq
 		self.set_sidvars(sidsuite.variables(self.cfn,self.chan1_freq,self.chan2_freq,self.chan3_freq,self.chan4_freq,self.chan5_freq,self.chan6_freq,self.integration,0,0,self.igain,self.width,self.start_freq))
 		self._chan6_freq_text_box.set_value(self.chan6_freq)
 		self.gr_goertzel_fc_1_0_0_0_0.set_freq(self.chan6_freq)
+
+	def get_chan5_freq(self):
+		return self.chan5_freq
 
 	def set_chan5_freq(self, chan5_freq):
 		self.chan5_freq = chan5_freq
@@ -496,11 +547,17 @@ class audioSIDnetRcvr(grc_wxgui.top_block_gui):
 		self._chan5_freq_text_box.set_value(self.chan5_freq)
 		self.gr_goertzel_fc_1_0_0_0.set_freq(self.chan5_freq)
 
+	def get_chan4_freq(self):
+		return self.chan4_freq
+
 	def set_chan4_freq(self, chan4_freq):
 		self.chan4_freq = chan4_freq
 		self.set_sidvars(sidsuite.variables(self.cfn,self.chan1_freq,self.chan2_freq,self.chan3_freq,self.chan4_freq,self.chan5_freq,self.chan6_freq,self.integration,0,0,self.igain,self.width,self.start_freq))
 		self._chan4_freq_text_box.set_value(self.chan4_freq)
 		self.gr_goertzel_fc_1_0_0.set_freq(self.chan4_freq)
+
+	def get_chan3_freq(self):
+		return self.chan3_freq
 
 	def set_chan3_freq(self, chan3_freq):
 		self.chan3_freq = chan3_freq
@@ -508,11 +565,17 @@ class audioSIDnetRcvr(grc_wxgui.top_block_gui):
 		self._chan3_freq_text_box.set_value(self.chan3_freq)
 		self.gr_goertzel_fc_1_0.set_freq(self.chan3_freq)
 
+	def get_chan2_freq(self):
+		return self.chan2_freq
+
 	def set_chan2_freq(self, chan2_freq):
 		self.chan2_freq = chan2_freq
 		self.set_sidvars(sidsuite.variables(self.cfn,self.chan1_freq,self.chan2_freq,self.chan3_freq,self.chan4_freq,self.chan5_freq,self.chan6_freq,self.integration,0,0,self.igain,self.width,self.start_freq))
 		self._chan2_freq_text_box.set_value(self.chan2_freq)
 		self.gr_goertzel_fc_1.set_freq(self.chan2_freq)
+
+	def get_chan1_freq(self):
+		return self.chan1_freq
 
 	def set_chan1_freq(self, chan1_freq):
 		self.chan1_freq = chan1_freq
@@ -520,18 +583,42 @@ class audioSIDnetRcvr(grc_wxgui.top_block_gui):
 		self._chan1_freq_text_box.set_value(self.chan1_freq)
 		self.gr_goertzel_fc_0.set_freq(self.chan1_freq)
 
+	def get_sidvars(self):
+		return self.sidvars
+
 	def set_sidvars(self, sidvars):
 		self.sidvars = sidvars
+
+	def get_converter_taps(self):
+		return self.converter_taps
 
 	def set_converter_taps(self, converter_taps):
 		self.converter_taps = converter_taps
 		self.gr_freq_xlating_fir_filter_xxx_0.set_taps((self.converter_taps))
 
+	def get_channel_taps(self):
+		return self.channel_taps
+
 	def set_channel_taps(self, channel_taps):
 		self.channel_taps = channel_taps
 
+	def get_cbw(self):
+		return self.cbw
+
 	def set_cbw(self, cbw):
 		self.cbw = cbw
+		self.gr_keep_one_in_n_0.set_n(self.cbw/10)
+		self.gr_keep_one_in_n_0_0.set_n(self.cbw/10)
+		self.gr_keep_one_in_n_0_0_0.set_n(self.cbw/10)
+		self.gr_keep_one_in_n_0_0_0_0.set_n(self.cbw/10)
+		self.gr_keep_one_in_n_0_0_0_0_0.set_n(self.cbw/10)
+		self.gr_keep_one_in_n_0_0_0_0_0_0.set_n(self.cbw/10)
+		self.gr_keep_one_in_n_0_0_0_0_1.set_n(self.cbw/2)
+		self.gr_keep_one_in_n_0_0_0_0_1_0.set_n(self.cbw/2)
+		self.gr_keep_one_in_n_0_0_0_0_1_0_0.set_n(self.cbw/2)
+		self.gr_keep_one_in_n_0_0_0_0_1_0_0_0.set_n(self.cbw/2)
+		self.gr_keep_one_in_n_0_0_0_0_1_0_0_0_0.set_n(self.cbw/2)
+		self.gr_keep_one_in_n_0_0_0_0_1_0_0_0_1.set_n(self.cbw/2)
 
 if __name__ == '__main__':
 	parser = OptionParser(option_class=eng_option, usage="%prog: [options]")

@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ASCII'?>
 <flow_graph>
-  <timestamp>Mon Jan  3 20:31:50 2011</timestamp>
+  <timestamp>Fri Jul  1 14:19:06 2011</timestamp>
   <block>
     <key>options</key>
     <param>
@@ -802,52 +802,6 @@
     </param>
   </block>
   <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>msk_width</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>(msk_baud*1.5)</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(603, 1878)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>msk_baud</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>200</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(598, 1941)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>gr_file_sink</key>
     <param>
       <key>id</key>
@@ -1147,29 +1101,6 @@
     <param>
       <key>_coordinate</key>
       <value>(892, 63)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>variable</key>
-    <param>
-      <key>id</key>
-      <value>cbw</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>value</key>
-      <value>msk_width</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(764, 1746)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -2006,37 +1937,6 @@
     </param>
   </block>
   <block>
-    <key>gr_keep_one_in_n</key>
-    <param>
-      <key>id</key>
-      <value>gr_keep_one_in_n_0_0_0_0_1</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>float</value>
-    </param>
-    <param>
-      <key>n</key>
-      <value>100</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(1633, 403)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>gr_file_sink</key>
     <param>
       <key>id</key>
@@ -2065,37 +1965,6 @@
     <param>
       <key>_coordinate</key>
       <value>(1776, 201)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>gr_goertzel_fc</key>
-    <param>
-      <key>id</key>
-      <value>gr_goertzel_fc_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>rate</key>
-      <value>samp_rate</value>
-    </param>
-    <param>
-      <key>len</key>
-      <value>int(samp_rate/200)</value>
-    </param>
-    <param>
-      <key>freq</key>
-      <value>chan1_freq</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(436, 122)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -2157,68 +2026,6 @@
     </param>
   </block>
   <block>
-    <key>gr_keep_one_in_n</key>
-    <param>
-      <key>id</key>
-      <value>gr_keep_one_in_n_0_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>float</value>
-    </param>
-    <param>
-      <key>n</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(1339, 228)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>gr_keep_one_in_n</key>
-    <param>
-      <key>id</key>
-      <value>gr_keep_one_in_n_0_0_0_0_1_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>float</value>
-    </param>
-    <param>
-      <key>n</key>
-      <value>100</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(1636, 465)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>gr_complex_to_mag</key>
     <param>
       <key>id</key>
@@ -2273,37 +2080,6 @@
     </param>
   </block>
   <block>
-    <key>gr_keep_one_in_n</key>
-    <param>
-      <key>id</key>
-      <value>gr_keep_one_in_n_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>float</value>
-    </param>
-    <param>
-      <key>n</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(1338, 179)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>gr_file_sink</key>
     <param>
       <key>id</key>
@@ -2332,68 +2108,6 @@
     <param>
       <key>_coordinate</key>
       <value>(1794, 340)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>gr_keep_one_in_n</key>
-    <param>
-      <key>id</key>
-      <value>gr_keep_one_in_n_0_0_0_0_1_0_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>float</value>
-    </param>
-    <param>
-      <key>n</key>
-      <value>100</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(1637, 540)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>gr_goertzel_fc</key>
-    <param>
-      <key>id</key>
-      <value>gr_goertzel_fc_1_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>rate</key>
-      <value>samp_rate</value>
-    </param>
-    <param>
-      <key>len</key>
-      <value>int(samp_rate/200)</value>
-    </param>
-    <param>
-      <key>freq</key>
-      <value>chan3_freq</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(437, 302)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -2448,130 +2162,6 @@
     <param>
       <key>_coordinate</key>
       <value>(633, 369)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>gr_keep_one_in_n</key>
-    <param>
-      <key>id</key>
-      <value>gr_keep_one_in_n_0_0_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>float</value>
-    </param>
-    <param>
-      <key>n</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(1339, 280)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>gr_keep_one_in_n</key>
-    <param>
-      <key>id</key>
-      <value>gr_keep_one_in_n_0_0_0_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>float</value>
-    </param>
-    <param>
-      <key>n</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(1338, 332)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>gr_keep_one_in_n</key>
-    <param>
-      <key>id</key>
-      <value>gr_keep_one_in_n_0_0_0_0_1_0_0_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>float</value>
-    </param>
-    <param>
-      <key>n</key>
-      <value>100</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(1653, 607)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>gr_goertzel_fc</key>
-    <param>
-      <key>id</key>
-      <value>gr_goertzel_fc_1</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>rate</key>
-      <value>samp_rate</value>
-    </param>
-    <param>
-      <key>len</key>
-      <value>int(samp_rate/200)</value>
-    </param>
-    <param>
-      <key>freq</key>
-      <value>chan2_freq</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(429, 213)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -2672,37 +2262,6 @@
     </param>
   </block>
   <block>
-    <key>gr_goertzel_fc</key>
-    <param>
-      <key>id</key>
-      <value>gr_goertzel_fc_1_0_0_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>rate</key>
-      <value>samp_rate</value>
-    </param>
-    <param>
-      <key>len</key>
-      <value>int(samp_rate/200)</value>
-    </param>
-    <param>
-      <key>freq</key>
-      <value>chan5_freq</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(432, 507)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>gr_single_pole_iir_filter_xx</key>
     <param>
       <key>id</key>
@@ -2757,37 +2316,6 @@
     </param>
   </block>
   <block>
-    <key>gr_keep_one_in_n</key>
-    <param>
-      <key>id</key>
-      <value>gr_keep_one_in_n_0_0_0_0_1_0_0_0_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>float</value>
-    </param>
-    <param>
-      <key>n</key>
-      <value>100</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(1651, 664)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>gr_complex_to_mag</key>
     <param>
       <key>id</key>
@@ -2804,68 +2332,6 @@
     <param>
       <key>_coordinate</key>
       <value>(618, 633)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>gr_keep_one_in_n</key>
-    <param>
-      <key>id</key>
-      <value>gr_keep_one_in_n_0_0_0_0_1_0_0_0_1</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>float</value>
-    </param>
-    <param>
-      <key>n</key>
-      <value>100</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(1650, 732)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>gr_keep_one_in_n</key>
-    <param>
-      <key>id</key>
-      <value>gr_keep_one_in_n_0_0_0_0_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>float</value>
-    </param>
-    <param>
-      <key>n</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(1654, 799)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -2897,37 +2363,6 @@
     <param>
       <key>_coordinate</key>
       <value>(635, 677)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>gr_keep_one_in_n</key>
-    <param>
-      <key>id</key>
-      <value>gr_keep_one_in_n_0_0_0_0_0_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>type</key>
-      <value>float</value>
-    </param>
-    <param>
-      <key>n</key>
-      <value>20</value>
-    </param>
-    <param>
-      <key>vlen</key>
-      <value>1</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(1650, 863)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -3126,68 +2561,6 @@
     </param>
   </block>
   <block>
-    <key>gr_goertzel_fc</key>
-    <param>
-      <key>id</key>
-      <value>gr_goertzel_fc_1_0_0_0_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>rate</key>
-      <value>samp_rate</value>
-    </param>
-    <param>
-      <key>len</key>
-      <value>int(samp_rate/200)</value>
-    </param>
-    <param>
-      <key>freq</key>
-      <value>chan6_freq</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(433, 612)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
-    <key>gr_goertzel_fc</key>
-    <param>
-      <key>id</key>
-      <value>gr_goertzel_fc_1_0_0</value>
-    </param>
-    <param>
-      <key>_enabled</key>
-      <value>True</value>
-    </param>
-    <param>
-      <key>rate</key>
-      <value>samp_rate</value>
-    </param>
-    <param>
-      <key>len</key>
-      <value>int(samp_rate/200)</value>
-    </param>
-    <param>
-      <key>freq</key>
-      <value>chan4_freq</value>
-    </param>
-    <param>
-      <key>_coordinate</key>
-      <value>(438, 405)</value>
-    </param>
-    <param>
-      <key>_rotation</key>
-      <value>0</value>
-    </param>
-  </block>
-  <block>
     <key>gr_single_pole_iir_filter_xx</key>
     <param>
       <key>id</key>
@@ -3212,6 +2585,587 @@
     <param>
       <key>_coordinate</key>
       <value>(612, 575)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>variable</key>
+    <param>
+      <key>id</key>
+      <value>cbw</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>value</key>
+      <value>400</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(764, 1746)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_goertzel_fc</key>
+    <param>
+      <key>id</key>
+      <value>gr_goertzel_fc_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>rate</key>
+      <value>samp_rate</value>
+    </param>
+    <param>
+      <key>len</key>
+      <value>int(samp_rate/cbw)</value>
+    </param>
+    <param>
+      <key>freq</key>
+      <value>chan1_freq</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(436, 122)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_goertzel_fc</key>
+    <param>
+      <key>id</key>
+      <value>gr_goertzel_fc_1</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>rate</key>
+      <value>samp_rate</value>
+    </param>
+    <param>
+      <key>len</key>
+      <value>int(samp_rate/cbw)</value>
+    </param>
+    <param>
+      <key>freq</key>
+      <value>chan2_freq</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(429, 213)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_goertzel_fc</key>
+    <param>
+      <key>id</key>
+      <value>gr_goertzel_fc_1_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>rate</key>
+      <value>samp_rate</value>
+    </param>
+    <param>
+      <key>len</key>
+      <value>int(samp_rate/cbw)</value>
+    </param>
+    <param>
+      <key>freq</key>
+      <value>chan3_freq</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(437, 302)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_goertzel_fc</key>
+    <param>
+      <key>id</key>
+      <value>gr_goertzel_fc_1_0_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>rate</key>
+      <value>samp_rate</value>
+    </param>
+    <param>
+      <key>len</key>
+      <value>int(samp_rate/cbw)</value>
+    </param>
+    <param>
+      <key>freq</key>
+      <value>chan4_freq</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(438, 405)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_goertzel_fc</key>
+    <param>
+      <key>id</key>
+      <value>gr_goertzel_fc_1_0_0_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>rate</key>
+      <value>samp_rate</value>
+    </param>
+    <param>
+      <key>len</key>
+      <value>int(samp_rate/cbw)</value>
+    </param>
+    <param>
+      <key>freq</key>
+      <value>chan5_freq</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(432, 507)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_goertzel_fc</key>
+    <param>
+      <key>id</key>
+      <value>gr_goertzel_fc_1_0_0_0_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>rate</key>
+      <value>samp_rate</value>
+    </param>
+    <param>
+      <key>len</key>
+      <value>int(samp_rate/cbw)</value>
+    </param>
+    <param>
+      <key>freq</key>
+      <value>chan6_freq</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(433, 612)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_keep_one_in_n</key>
+    <param>
+      <key>id</key>
+      <value>gr_keep_one_in_n_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>float</value>
+    </param>
+    <param>
+      <key>n</key>
+      <value>cbw/10</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(1338, 179)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_keep_one_in_n</key>
+    <param>
+      <key>id</key>
+      <value>gr_keep_one_in_n_0_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>float</value>
+    </param>
+    <param>
+      <key>n</key>
+      <value>cbw/10</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(1339, 228)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_keep_one_in_n</key>
+    <param>
+      <key>id</key>
+      <value>gr_keep_one_in_n_0_0_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>float</value>
+    </param>
+    <param>
+      <key>n</key>
+      <value>cbw/10</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(1339, 280)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_keep_one_in_n</key>
+    <param>
+      <key>id</key>
+      <value>gr_keep_one_in_n_0_0_0_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>float</value>
+    </param>
+    <param>
+      <key>n</key>
+      <value>cbw/10</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(1338, 332)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_keep_one_in_n</key>
+    <param>
+      <key>id</key>
+      <value>gr_keep_one_in_n_0_0_0_0_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>float</value>
+    </param>
+    <param>
+      <key>n</key>
+      <value>cbw/10</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(1654, 799)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_keep_one_in_n</key>
+    <param>
+      <key>id</key>
+      <value>gr_keep_one_in_n_0_0_0_0_0_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>float</value>
+    </param>
+    <param>
+      <key>n</key>
+      <value>cbw/10</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(1650, 863)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_keep_one_in_n</key>
+    <param>
+      <key>id</key>
+      <value>gr_keep_one_in_n_0_0_0_0_1</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>float</value>
+    </param>
+    <param>
+      <key>n</key>
+      <value>cbw/2</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(1633, 403)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_keep_one_in_n</key>
+    <param>
+      <key>id</key>
+      <value>gr_keep_one_in_n_0_0_0_0_1_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>float</value>
+    </param>
+    <param>
+      <key>n</key>
+      <value>cbw/2</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(1636, 465)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_keep_one_in_n</key>
+    <param>
+      <key>id</key>
+      <value>gr_keep_one_in_n_0_0_0_0_1_0_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>float</value>
+    </param>
+    <param>
+      <key>n</key>
+      <value>cbw/2</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(1637, 540)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_keep_one_in_n</key>
+    <param>
+      <key>id</key>
+      <value>gr_keep_one_in_n_0_0_0_0_1_0_0_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>float</value>
+    </param>
+    <param>
+      <key>n</key>
+      <value>cbw/2</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(1653, 607)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_keep_one_in_n</key>
+    <param>
+      <key>id</key>
+      <value>gr_keep_one_in_n_0_0_0_0_1_0_0_0_0</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>float</value>
+    </param>
+    <param>
+      <key>n</key>
+      <value>cbw/2</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(1651, 664)</value>
+    </param>
+    <param>
+      <key>_rotation</key>
+      <value>0</value>
+    </param>
+  </block>
+  <block>
+    <key>gr_keep_one_in_n</key>
+    <param>
+      <key>id</key>
+      <value>gr_keep_one_in_n_0_0_0_0_1_0_0_0_1</value>
+    </param>
+    <param>
+      <key>_enabled</key>
+      <value>True</value>
+    </param>
+    <param>
+      <key>type</key>
+      <value>float</value>
+    </param>
+    <param>
+      <key>n</key>
+      <value>cbw/2</value>
+    </param>
+    <param>
+      <key>vlen</key>
+      <value>1</value>
+    </param>
+    <param>
+      <key>_coordinate</key>
+      <value>(1650, 732)</value>
     </param>
     <param>
       <key>_rotation</key>
@@ -3359,12 +3313,6 @@
   <connection>
     <source_block_id>gr_single_pole_iir_filter_xx_0</source_block_id>
     <sink_block_id>gr_keep_one_in_n_0_0_0_0_1</sink_block_id>
-    <source_key>0</source_key>
-    <sink_key>0</sink_key>
-  </connection>
-  <connection>
-    <source_block_id>gr_keep_one_in_n_0_0_0_0</source_block_id>
-    <sink_block_id>gr_file_sink_1_0_0_0_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
@@ -3563,6 +3511,12 @@
   <connection>
     <source_block_id>gr_single_pole_iir_filter_xx_0_0_0_0_0</source_block_id>
     <sink_block_id>gr_keep_one_in_n_0_0_0_0_1_0_0_0_0</sink_block_id>
+    <source_key>0</source_key>
+    <sink_key>0</sink_key>
+  </connection>
+  <connection>
+    <source_block_id>gr_keep_one_in_n_0_0_0_0</source_block_id>
+    <sink_block_id>gr_file_sink_1_0_0_0_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>
   </connection>
