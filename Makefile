@@ -3,7 +3,7 @@ PROGS=sidhandler synoptic_reader sidconvert sid_phaser
 SOURCES=sidhandler.c synoptic_reader.c sidconvert.c sid_phaser.c
 PYPROGS=audioSIDnetRcvr.py
 GRCPROGS=audioSIDnetRcvr.grc
-SCRIPTS=sidstart sidprocess sidprocess_new.awk sidship notchfilt.py sidsuite.py Makefile.sidsuite sidplot SIDsuite.doc \
+SCRIPTS=sidstart sidprocess sidprocess_new.awk sidship notchfilt.py sidsuite.py Makefile sidplot SIDsuite.doc \
 	gnuradio-config.conf
 all: $(PROGS)
 clean:
